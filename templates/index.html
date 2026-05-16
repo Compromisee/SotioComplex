@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"><title>html dash</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<link rel="stylesheet" href="/static/themes.css">
+<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/pipeline.css">
+<script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+</head>
+<body>
+
+<canvas id="dotCanvas"></canvas>
+
+<div id="startup">
+  <div class="startup-icon"><span class="material-icons-round">hub</span></div>
+  <div class="startup-title">html dash</div>
+  <div class="startup-sub">v4 · loading all systems</div>
+  <div class="startup-bar-wrap"><div class="startup-bar"></div></div>
+</div>
+
+<!-- Command Palette #17 -->
+<div id="palette" class="palette hidden">
+  <div class="palette-box">
+    <input type="text" id="paletteInput" placeholder="search actions, themes, presets...">
+    <div id="paletteResults"></div>
+  </div>
+</div>
+
+<!-- Notification Bell #18 -->
+<div class="notif-bell" onclick="toggleNotifs()">
+  <span class="material-icons-round">notifications</span>
+  <span class="notif-badge" id="notifBadge" style="display:none">0</span>
+</div>
+<div id="notifPanel" class="notif-panel hidden"></div>
+
+<header class="header">
+  <div class="header-icon-ring"><span class="material-icons-round">hub</span></div>
+  <h1>html dash</h1>
+  <p class="subtitle">scrape · summarize · generate · publish · automate</p>
+  <div class="theme-switcher" id="themeSwitcher"></div>
+</header>
+
+<div class="container">
+  <!-- Workspace tabs #19 -->
+  <div class="workspace-tabs">
+    <div class="ws-tab active" data-ws="default">default <span class="material-icons-round" style="font-size:14px;margin-left:4px">close</span></div>
+    <div class="ws-tab" onclick="addWorkspace()"><span class="material-icons-round">add</span></div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="sources"><span class="material-icons-round">language</span>sources</div>
+    <div class="tab" data-tab="themes"><span class="material-icons-round">label</span>themes</div>
+    <div class="tab" data-tab="articles"><span class="material-icons-round">article</span>articles</div>
+    <div class="tab" data-tab="edit"><span class="material-icons-round">edit_note</span>edit</div>
+    <div class="tab" data-tab="generate"><span class="material-icons-round">auto_awesome</span>generate</div>
+    <div class="tab" data-tab="pipeline"><span class="material-icons-round">account_tree</span>pipeline</div>
+    <div class="tab" data-tab="results"><span class="material-icons-round">collections</span>results</div>
+    <div class="tab" data-tab="publish"><span class="material-icons-round">rocket_launch</span>publish</div>
+    <div class="tab" data-tab="schedule"><span class="material-icons-round">schedule</span>schedule</div>
+    <div class="tab" data-tab="analyze"><span class="material-icons-round">insights</span>analyze</div>
+    <div class="tab" data-tab="history"><span class="material-icons-round">history</span>history</div>
+    <div class="tab" data-tab="settings"><span class="material-icons-round">settings</span>settings</div>
+  </div>
+
+  <!-- SOURCES -->
+  <div class="panel active" data-panel="sources">
+    <div class="panel-header"><div class="panel-icon"><span class="material-icons-round">language</span></div>
+      <div><div class="panel-title">sources</div><div class="panel-sub">sites & RSS feeds</div></div></div>
+    <div class="field"><div class="field-label">presets</div><div id="sourcePresets" class="chip-row"></div></div>
+    <div class="field"><div class="field-label">site urls</div>
+      <div class="drop-zone" id="dropSites">
+        <span class="material-icons-round">cloud_upload</span>
+        <div class="drop-zone-text">drop .txt file or paste below</div>
+      </div>
+      <textarea id="sites" placeholder="techcrunch.com&#10;bbc.com/news"></textarea>
+    </div>
+    <button class="btn btn-primary btn-lg" onclick="scrapeThemes()"><span class="material-icons-round">search</span>scrape themes</button>
+  </div>
+
+  <!-- THEMES -->
+  <div class="panel" data-panel="themes">
+    <div class="panel-header"><div class="panel-icon"><span class="material-icons-round">label</span></div>
+      <div><div class="panel-title">themes</div><div class="panel-sub">select topics + trend spikes</div></div></div>
+    <div id="trends" class="trends-box"></div>
+    <input type="text" id="themeSearch" placeholder="filter..." oninput="filterThemes()">
+    <div id="themes" class="chip-row" style="margin-top:10px"></div>
+    <div class="divider"></div>
+    <div class="field"><div class="field-label">or paste article</div>
+      <textarea id="article" placeholder="full article text..."></textarea></div>
+    <button class="btn btn-primary btn-lg" onclick="scrapeArticles()"><span class="material-icons-round">download</span>get articles</button>
+  </div>
+
+  <!-- ARTICLES -->
+  <div class="panel" data-panel="articles">
+    <div class="panel-header"><div class="panel-icon"><span class="material-icons-round">article</span></div>
+      <div><div class="panel-title">articles</div><div class="panel-sub">trust-ranked + sentiment</div></div></div>
+    <div id="articles" class="article-list"></div>
+  </div>
+
+  <!-- EDIT (#3 Hot-swap) -->
+  <div class="panel" data-panel="edit">
+    <div class="panel-header"><div class="panel-icon"><span class="material-icons-round">edit_note</span></div>
+      <div><div class="panel-title">hot-swap editor</div><div class="panel-sub">review AI summaries before render</div></div></div>
+    <button class="btn btn-primary" onclick="previewSummaries()"><span class="material-icons-round">visibility</span>generate previews</button>
+    <div id="editList" style="margin-top:14px"></div>
+  </div>
+
+  <!-- GENERATE -->
+  <div class="panel" data-panel="generate">
+    <div class="panel-header"><div class="panel-icon"><span class="material-icons-round">auto_awesome</span></div>
+      <div><div class="panel-title">generate</div><div class="panel-sub">configure pipeline</div></div></div>
+
+    <div class="grid-2">
+      <div class="field"><div class="field-label">template</div>
+        <select id="template" onchange="applyTemplate()"><option value="">— none —</option></select></div>
+      <div class="field"><div class="field-label">provider</div>
+        <select id="provider"><option>ollama</option><option>openai</option><option>anthropic</option><option>groq</option><option>gemini</option><option>openrouter</option><option>lmstudio</option></select></div>
+      <div class="field"><div class="field-label">model</div><select id="model"></select></div>
+      <div class="field"><div class="field-label">style</div><select id="style"></select></div>
+      <div class="field"><div class="field-label">voice</div><select id="voice"></select></div>
+      <div class="field"><div class="field-label">voice 2 (dialogue)</div><select id="voice2"></select></div>
+      <div class="field"><div class="field-label">translate</div><input type="text" id="translate" placeholder="optional"></div>
+      <div class="field"><div class="field-label">max articles</div><input type="text" id="max" value="2"></div>
+      <div class="field"><div class="field-label">image count</div><input type="text" id="imgCount" value="2"></div>
+      <div class="field"><div class="field-label">video url</div><input type="text" id="videoUrl"></div>
+      <div class="field"><div class="field-label">video prompt</div><input type="text" id="videoPrompt"></div>
+      <div class="field"><div class="field-label">api key</div><input type="text" id="apiKey"></div>
+      <div class="field"><div class="field-label">elevenlabs key (clone)</div><input type="text" id="elevenKey"></div>
+      <div class="field"><div class="field-label">notion key</div><input type="text" id="notionKey"></div>
+    </div>
+
+    <div class="toggle-row">
+      <label class="toggle"><input type="checkbox" id="shorts" checked><span>9:16</span></label>
+      <label class="toggle"><input type="checkbox" id="split" checked><span>split text</span></label>
+      <label class="toggle"><input type="checkbox" id="genVideo" checked><span>video</span></label>
+      <label class="toggle"><input type="checkbox" id="genImages" checked><span>images</span></label>
+      <label class="toggle"><input type="checkbox" id="genTts" checked><span>tts</span></label>
+      <label class="toggle"><input type="checkbox" id="genThumb" checked><span>thumb</span></label>
+      <label class="toggle"><input type="checkbox" id="useWhisper"><span>whisper captions</span></label>
+      <label class="toggle"><input type="checkbox" id="addMusic" checked><span>music</span></label>
+      <label class="toggle"><input type="checkbox" id="dialogueMode"><span>dialogue mode</span></label>
+      <label class="toggle"><input type="checkbox" id="concurrent"><span>concurrent</span></label>
+      <label class="toggle"><input type="checkbox" id="abTest"><span>a/b test</span></label>
+      <label class="toggle"><input type="checkbox" id="autoPublish"><span>auto-publish</span></label>
+    </div>
+
+    <!-- Cost estimate #4 -->
+    <div class="cost-card" id="costCard">
+      <div><span class="material-icons-round">payments</span><strong>estimate:</strong> <span id="costText">click "estimate" to calculate</span></div>
+      <button class="btn" onclick="estimateCost()">estimate</button>
+    </div>
+
+    <div class="status-card" id="statusCard"><div class="status-dot"></div><div class="status-text" id="statusText">ready</div></div>
+
+    <div class="progress-section">
+      <div class="progress-header"><div class="progress-label"><span class="material-icons-round">sync</span><span id="progStep">pipeline</span></div>
+        <div class="progress-pct" id="progPct">0%</div></div>
+      <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-success btn-lg" onclick="generate()"><span class="material-icons-round">bolt</span>run pipeline</button>
+      <button class="btn" onclick="control('pause')"><span class="material-icons-round">pause</span></button>
+      <button class="btn" onclick="control('resume')"><span class="material-icons-round">play_arrow</span></button>
+      <button class="btn" onclick="control('stop')"><span class="material-icons-round">stop</span></button>
+    </div>
+
+    <!-- Live Preview #2 -->
+    <div class="preview-dock" id="previewDock">
+      <div class="preview-head">live preview <button class="btn" onclick="document.getElementById('previewDock').classList.toggle('collapsed')">⇲</button></div>
+      <div class="preview-body" id="previewBody"></div>
+    </div>
+
+    <div class="log-section">
+      <div class="log-toggle" onclick="this.classList.toggle('open');document.getElementById('log').classList.toggle('open')">
+        <span class="material-icons-round">chevron_right</span>activity log
+      </div>
+      <div class="log" id="log"></div>
+    </div>
+  </div>
+
+  <!-- PIPELINE #1 Visual builder -->
+  <div class="panel" data-panel="pipeline">
+    <div class="panel-header"><div class="panel-icon"><span class="material-icons-round">account_tree</span></div>
+      <div><div class="panel-title">pipeline builder</div><div class="panel-sub">drag nodes · connect · run</div></div></div>
+    <div class="pipeline-toolbar">
+      <button class="btn" onclick="addNode('source')"><span class="material-icons-round">language</span>source</button>
+      <button class="btn" onclick="addNode('scraper')"><span class="material-icons-round">search</span>scraper</button>
+      <button class="btn" onclick="addNode('ai')"><span class="material-icons-round">smart_toy</span>ai</button>
+      <button class="btn" onclick="addNode('tts')"><span class="material-icons-round">record_voice_over</span>tts</button>
+      <button class="btn" onclick="addNode('video')"><span class="material-icons-round">movie</span>video</button>
+      <button class="btn" onclick="addNode('image')"><span class="material-icons-round">image</span>image</button>
+      <button class="btn" onclick="addNode('publish')"><span class="material-icons-round">rocket_launch</span>publish</button>
+      <div style="flex:1"></div>
+      <button class="btn" onclick="savePipeline()"><span class="material-icons-round">save</span>save</button>
+      <button class="btn btn-success" onclick="runPipeline()"><span class="material-icons-round">play_arrow</span>run</button>
+    </div>
+    <div id="pipelineCanvas" class="pipeline-canvas"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="panel" data-panel="results">
+    <div class="panel-header"><div class="panel-icon"><span class="material-icons-round">collections</span></div>
+      <div><div class="panel-title">results</div><div class="panel-sub">assets + clusters</div></div></div>
+    <div class="btn-row" style="margin-bottom:18px">
+      <select id="exportFmt" style="width:auto"><option>json</option><option>md</option><option>txt</option><option>csv</option><option>obsidian</option><option>notion</option></select>
+      <button class="btn" onclick="doExport()"><span class="material-icons-round">file_download</span>export</button>
+      <input id="notionDb" placeholder="notion db id" style="width:200px">
+    </div>
+    <div id="clusters"></div>
+    <div id="results"></div>
+  </div>
+
+  <!-- PUBLISH -->
+  <div class="panel" data-panel="publish">
+    <div class="panel-header"><div class="panel-icon"><span class="material-icons-round">rocket_launch</span></div>
+      <div><div class="panel-title">publish</div><div class="panel-sub">distribution channels</div></div></div>
+    <div class="grid-2">
+      <div class="field"><div class="field-label">discord webhook</div><input id="discordHook"></div>
+      <div class="field"><div class="field-label">slack webhook</div><input id="slackHook"></div>
+      <div class="field"><div class="field-label">wp url</div><input id="wpUrl"></div>
+      <div class="field"><div class="field-label">wp user</div><input id="wpUser"></div>
+      <div class="field"><div class="field-label">wp app password</div><input id="wpPass"></div>
+      <div class="field"><div class="field-label">rss feed url</div><input value="/feed.xml" readonly></div>
+    </div>
+    <button class="btn btn-primary"><span class="material-icons-round">save</span>save publisher config</button>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="panel" data-panel="schedule">
+    <div class="panel-header"><div class="panel-icon"><span class="material-icons-round">schedule</span></div>
+      <div><div class="panel-title">scheduler</div><div class="panel-sub">auto-run pipelines</div></div></div>
+    <div class="grid-2">
+      <div class="field"><div class="field-label">job id</div><input id="schedId" value="daily_tech"></div>
+      <div class="field"><div class="field-label">every (minutes)</div><input id="schedInt" value="60"></div>
+    </div>
+    <button class="btn btn-primary" onclick="schedule()"><span class="material-icons-round">add_alarm</span>add schedule</button>
+    <div id="schedList" style="margin-top:14px"></div>
+  </div>
+
+  <!-- ANALYZE #30-33 -->
+  <div class="panel" data-panel="analyze">
+    <div class="panel-header"><div class="panel-icon"><span class="material-icons-round">insights</span></div>
+      <div><div class="panel-title">analyze</div><div class="panel-sub">facts · clusters · sentiment</div></div></div>
+    <div class="field"><div class="field-label">fact-check claim</div>
+      <textarea id="factClaim" placeholder="paste claim..."></textarea></div>
+    <button class="btn btn-primary" onclick="factCheck()"><span class="material-icons-round">verified</span>check</button>
+    <div id="factResult" style="margin-top:14px"></div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="panel" data-panel="history">
+    <div class="panel-header"><div class="panel-icon"><span class="material-icons-round">history</span></div>
+      <div><div class="panel-title">history</div></div></div>
+    <div id="historyList"></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="panel" data-panel="settings">
+    <div class="panel-header"><div class="panel-icon"><span class="material-icons-round">settings</span></div>
+      <div><div class="panel-title">settings</div></div></div>
+    <div class="btn-row">
+      <button class="btn" onclick="clearCache()"><span class="material-icons-round">delete</span>clear cache</button>
+      <button class="btn" onclick="loadHealth()"><span class="material-icons-round">monitoring</span>source health</button>
+      <button class="btn" onclick="startTour()"><span class="material-icons-round">tour</span>onboarding tour</button>
+    </div>
+    <div id="cacheStats" style="margin-top:14px;font-family:monospace;color:var(--sub)"></div>
+    <div id="healthReport" style="margin-top:14px"></div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"><span class="material-icons-round">check_circle</span><span id="toastText">copied</span></div>
+
+<script src="/static/app.js"></script>
+<script src="/static/pipeline.js"></script>
+<script src="/static/palette.js"></script>
+<script src="/static/tour.js"></script>
+</body>
+</html>

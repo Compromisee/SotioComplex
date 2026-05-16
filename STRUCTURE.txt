@@ -1,0 +1,44 @@
+html-dash/
+├── app.py                    # Main Flask + SocketIO server
+├── cli.py                    # CLI mode (feature #16)
+├── config.json
+├── presets.json
+├── themes.json
+├── pipeline_templates.json   # Feature #11
+├── users.json                # Feature #20
+├── requirements.txt
+├── modules/
+│   ├── __init__.py
+│   ├── logger.py
+│   ├── scraper.py
+│   ├── cleaner.py
+│   ├── cache.py              # #6 Smart Caching
+│   ├── ai_handler.py         # #5 Multi-provider
+│   ├── tts_handler.py        # #7 Multi-voice + #34 cloning
+│   ├── whisper_handler.py    # #8 Word-level captions
+│   ├── video_handler.py      # #2 live preview + #9 music + #10 stock
+│   ├── image_handler.py
+│   ├── thumbnail.py
+│   ├── exporter.py           # #24 Notion/Obsidian
+│   ├── history.py
+│   ├── scheduler.py          # #29 auto-posting
+│   ├── queue_manager.py      # #13 concurrent jobs
+│   ├── cost_estimator.py     # #4 cost/time tracker
+│   ├── publishers.py         # #25-28 YT/TikTok/WP/RSS
+│   ├── analyzers.py          # #30-33 sentiment/clustering/facts/trends
+│   ├── webhooks.py           # #15 webhooks
+│   ├── source_health.py      # #14
+│   ├── auth.py               # #20 multi-user
+│   └── utils.py
+├── templates/index.html
+├── static/
+│   ├── style.css
+│   ├── themes.css
+│   ├── pipeline.css          # node editor styles
+│   ├── app.js
+│   ├── pipeline.js           # #1 visual builder
+│   ├── palette.js            # #17 command palette
+│   └── tour.js               # #22 onboarding
+├── stock/                    # #10 pre-bundled stock loops
+├── music/                    # #9 royalty-free music
+└── output/...

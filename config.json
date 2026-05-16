@@ -1,0 +1,30 @@
+{
+  "app_name": "Html Dash",
+  "version": "4.0.0",
+  "default_theme": "dark",
+  "ai": {
+    "default_model": "llama3",
+    "default_provider": "ollama",
+    "ollama_url": "http://localhost:11434",
+    "lmstudio_url": "http://localhost:1234",
+    "providers": ["ollama","openai","anthropic","groq","gemini","openrouter","lmstudio"]
+  },
+  "paths": {
+    "video_dir": "output/videos","image_dir": "output/images","log_dir": "output/logs",
+    "export_dir": "output/exports","thumb_dir": "output/thumbnails","audio_dir": "output/audio",
+    "history_dir": "output/history","cache_dir": "output/cache",
+    "stock_dir": "stock","music_dir": "music","preview_dir": "output/previews"
+  },
+  "scraping": { "user_agent": "Mozilla/5.0", "timeout": 15, "min_article_length": 300 },
+  "tts": {
+    "default_voice": "en-US-AriaNeural",
+    "voices": ["en-US-AriaNeural","en-US-GuyNeural","en-GB-SoniaNeural","en-GB-RyanNeural","en-AU-NatashaNeural","en-AU-WilliamNeural"]
+  },
+  "filters": { "blacklist_sites": [], "whitelist_sites": [], "blacklist_keywords": ["advertisement","sponsored"], "min_words": 100 },
+  "source_trust": { "bbc.com": 95, "reuters.com": 95, "apnews.com": 95, "bloomberg.com": 90, "techcrunch.com": 85, "default": 60 },
+  "cache": { "ttl_hours": 24, "max_size_gb": 5 },
+  "queue": { "max_concurrent": 3 },
+  "cost_per_1k_tokens": { "openai_gpt4o_mini": 0.00015, "anthropic_haiku": 0.00025, "groq": 0.0, "gemini": 0.0, "ollama": 0.0 },
+  "webhooks": { "discord_url": "", "slack_url": "" },
+  "publishers": { "youtube_enabled": false, "wordpress_url": "", "wordpress_user": "", "wordpress_pass": "" }
+}

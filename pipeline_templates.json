@@ -1,0 +1,15 @@
+{
+  "daily_tech_shorts": {
+    "name": "Daily Tech Shorts",
+    "description": "Auto-generate 3 tech shorts per day",
+    "nodes": [
+      {"id":"src","type":"source","preset":"tech"},
+      {"id":"scr","type":"scraper"},
+      {"id":"ai","type":"ai","style":"social_hook"},
+      {"id":"tts","type":"tts","voice":"en-US-GuyNeural"},
+      {"id":"vid","type":"video","shorts":true},
+      {"id":"pub","type":"publish","target":"youtube"}
+    ],
+    "edges": [["src","scr"],["scr","ai"],["ai","tts"],["tts","vid"],["vid","pub"]]
+  }
+}

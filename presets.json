@@ -1,0 +1,26 @@
+{
+  "source_presets": {
+    "tech": ["techcrunch.com","theverge.com","arstechnica.com","wired.com"],
+    "finance": ["bloomberg.com","ft.com","reuters.com/business"],
+    "news": ["bbc.com/news","apnews.com","reuters.com"],
+    "sports": ["espn.com","bbc.com/sport"],
+    "science": ["sciencedaily.com","nature.com","newscientist.com"]
+  },
+  "prompt_presets": {
+    "concise": "Summarize in 2-3 short punchy sentences for a voiceover.",
+    "detailed": "Provide a 5-sentence detailed summary covering key points.",
+    "bullet": "Give exactly 3 bullet points of the most important facts.",
+    "social_hook": "Write a viral social media post: shocking hook first, then 2 sentences. Max 150 words. No hashtags.",
+    "script_video": "Write a short video script: HOOK (1 sentence), BODY (3 sentences), CTA (1 sentence).",
+    "news_anchor": "Rewrite as a formal news anchor reading aloud. 4 sentences.",
+    "casual_eli5": "Explain like I'm 5, casual and friendly, 3-4 sentences.",
+    "podcast_dialogue": "Convert into a 2-person podcast dialogue with HOST: and GUEST: labels. 6 exchanges total."
+  },
+  "templates": {
+    "news": {"style":"news_anchor","voice":"en-GB-SoniaNeural","shorts":false},
+    "tech": {"style":"casual_eli5","voice":"en-US-GuyNeural","shorts":true},
+    "finance": {"style":"detailed","voice":"en-US-AriaNeural","shorts":false},
+    "sports": {"style":"social_hook","voice":"en-AU-NatashaNeural","shorts":true},
+    "podcast": {"style":"podcast_dialogue","voice":"en-US-AriaNeural","shorts":false}
+  }
+}

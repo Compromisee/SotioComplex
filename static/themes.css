@@ -1,0 +1,18 @@
+.theme-switcher { display: flex; gap: 5px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+.theme-btn { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px;
+  cursor: pointer; font-family: 'JetBrains Mono'; font-size: 10px; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--sub); background: var(--surface2); border: 1px solid var(--border); transition: all .2s; }
+.theme-btn:hover, .theme-btn.active { color: var(--accent); border-color: var(--accent); box-shadow: 0 0 12px var(--glow2); }
+.theme-btn .material-icons-round { font-size: 13px; }
+
+/* Command palette #17 */
+.palette { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 500;
+  display: flex; align-items: flex-start; justify-content: center; padding-top: 100px; }
+.palette.hidden { display: none; }
+.palette-box { width: 90%; max-width: 600px; background: var(--surface); border: 1.5px solid var(--accent);
+  box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+.palette-box input { width: 100%; padding: 16px; font-size: 14px; background: var(--surface2); color: var(--bright); border: none; border-bottom: 1px solid var(--border); }
+#paletteResults { max-height: 400px; overflow-y: auto; }
+.pal-item { padding: 10px 16px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 8px; }
+.pal-item:hover, .pal-item.sel { background: var(--surface2); color: var(--accent); }
+.pal-item .material-icons-round { font-size: 16px; color: var(--muted); }
